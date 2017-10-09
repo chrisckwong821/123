@@ -3,7 +3,7 @@ title: Chris Blog
 SEOTitle: Chris Blog
 #header-img: img/home-bg.jpg
 email: chrisckwong821@gmail.com
-description: " |  | "
+description: " | Chris Wong and His Blog | On Python | Trading Strategies | Calisthenics | Meditation"
 keyword: "Python, Algorithmic Trading, Financial Anaylsis, Pandas, Web Scraping"
 url: "https://chrisckwong821.github.io/"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
@@ -13,12 +13,11 @@ baseurl: ""                             # for example, '/blog' if your blog host
 # SNS settings
 RSS: false
 #weibo_username:     huxpro
-#zhihu_username:     huxpro
+zhihu_username: chriswong-97-15
 github_username: chrisckwong821
 twitter_username: chrisckwong821
 linkedin_usename: chris-chun-kau-wong-8a05bba4/
-#facebook_username:  huxpro
-# linkedin_username:  firstname-lastname-idxxxx
+facebook_username: wongchunkau
 
 
 
@@ -29,7 +28,6 @@ permalink: pretty
 paginate: 10
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","README.zh.md"]
 anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
-
 
 
 # Gems
@@ -62,15 +60,15 @@ netease_comment: false
 # ba_track_id: [your track id]
 
 # Google Analytics
-ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
-ga_domain: huangxuan.me
+#ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
+#ga_domain: huangxuan.me
 
 
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "写写代码，做做设计，<br>离开世界之前，一切都是过程"
-sidebar-avatar: /img/avatar-hux.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-about-description: "Python Developer，<br>LOL"
+sidebar-avatar: /asset/media/Profile.png      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
