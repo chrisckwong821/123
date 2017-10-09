@@ -1,11 +1,12 @@
 > 待續
-> 
+>
 
-👉 戳 [Portfolio](/portfolio)、[Github](http://github.com/chrisckwong821)、
+👉 [Portfolio](/portfolio)
+   [Github](http://github.com/chrisckwong821)
 
 
-##### Talks
+##### Books Reading
 
-- [JavaScript 模块化七日谈][1] · 2015
+- [Illness as a Metaphor][1] · Susan Sontag
 
-[1]: //huangxuan.me/2015/07/09/js-module-7day/
+[1]: https://www.goodreads.com/book/show/119688.Illness_as_Metaphor
