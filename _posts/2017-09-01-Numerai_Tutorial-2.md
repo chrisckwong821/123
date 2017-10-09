@@ -4,6 +4,7 @@ header:
 title: Numerai Tutorial - II - Label Specific Preprocessing and Iterative Screening
 categories: [Machine Learning]
 tags: [Numerai, Python, Data Science, Machine Learning]
+header-img: "img/post-bg-os-metro.jpg"
 fullview: true
 comments: true
 ---

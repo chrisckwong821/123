@@ -68,7 +68,7 @@ netease_comment: false
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "Python Developer，<br>LOL"
-sidebar-avatar: /asset/media/Profile.png      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/Profile.png      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
