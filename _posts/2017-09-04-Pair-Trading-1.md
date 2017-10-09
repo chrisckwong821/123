@@ -1,7 +1,8 @@
 ---
 layout: post
-header:
+header-img: "img/auto1.jpg"
 title: Pair Trading - I - DBSCAN on HK Stocks
+subtitle: Selecting Stocks with a Click
 categories: [Machine Learning, Financial Trading]
 tags: [Python, Machine Learning, Pair Trading]
 fullview: true
