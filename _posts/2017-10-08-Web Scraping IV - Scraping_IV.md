@@ -1,6 +1,6 @@
 ---
 layout: post
-header:
+header-img: "img/guessing.jpg"
 title: Web Scraping IV - Scrapy and Sentiment Analysis
 categories: [Python, Web Scraping, Sentiment Analysis]
 tags: [Python, Web Scraping, TextBlob, Scrapy, Bash]

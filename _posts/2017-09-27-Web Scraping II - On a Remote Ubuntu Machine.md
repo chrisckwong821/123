@@ -1,6 +1,6 @@
 ---
 layout: post
-header:
+header-img: "img/remote.jpg"
 title: Web Scraping II - On a Remote Ubuntu Machine
 categories: [Python, Web Scraping]
 tags: [Python, Web Scraping, Ubuntu, Virtual Machine]

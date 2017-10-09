@@ -1,6 +1,6 @@
 ---
 layout: post
-header:
+header-img: "img/sync.jpg"
 title: Web Scraping III - Data Synchronization 
 categories: [Python, Web Scraping]
 tags: [Python, Web Scraping, Ubuntu, Database, Bash]

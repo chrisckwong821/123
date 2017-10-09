@@ -1,6 +1,6 @@
 ---
 layout: post
-header:
+header-img: "img/amazing.jpg"
 title: Pair Trading - II - Regression and Ornstein-Uhlenbeck process(O-U Model)
 categories: [Machine Learning, Financial Trading]
 tags: [Python, Machine Learning, Pair Trading]
