@@ -1,6 +1,6 @@
 # Site settings
 title: Chris Journal
-SEOTitle: Chris Journal | Lifestyles and Sharing
+SEOTitle: Chris Journal | Python Codes and Calisthenics
 #header-img: img/home-bg.jpg
 email: chrisckwong821@gmail.com
 description: " | Chris Wong and His Blog | On Python | Trading Strategies | Calisthenics | Meditation"
@@ -47,8 +47,7 @@ kramdown:
 
 
 # Disqus settings
-disqus: my-blog-b38tyl8oop
-#disqus_username: 
+disqus_username: chriswong
 
 # Netease setttings
 netease_comment: false
