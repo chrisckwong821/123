@@ -1,12 +1,7 @@
-> 待續
+> 寫一下Code，喝一口啤酒，做兩下引體上升
 >
 
-👉 [Portfolio](/portfolio)
-   [Github](http://github.com/chrisckwong821)
+運動迷，自身體重健身上癮者，俄式，單手倒立訓練中。
 
+無聊就做運動，做攰就打Code，打攰就做運動。
 
-##### Books Reading
-
-- [Illness as a Metaphor][1] · Susan Sontag
-
-[1]: https://www.goodreads.com/book/show/119688.Illness_as_Metaphor
