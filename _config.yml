@@ -1,10 +1,10 @@
 # Site settings
-title: Chris Journal
-SEOTitle: Chris Journal | Python Codes and Calisthenics
+title: Chris IO
+SEOTitle: Chris IO | Input/Output in Life
 #header-img: img/home-bg.jpg
 email: chrisckwong821@gmail.com
 description: " | Chris Wong and His Blog | On Python | Trading Strategies | Calisthenics | Meditation"
-keyword: "Python, Algorithmic Trading, Financial Anaylsis, Pandas, Web Scraping"
+keyword: "Python, Algorithmic Trading, Financial Anaylsis, Python, Pandas, Web Scraping"
 url: "lifeio.me"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
@@ -66,7 +66,7 @@ netease_comment: false
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "寫一下Code，喝一口啤酒<br>做兩下引體上升"
+sidebar-about-description: "Last three! One, Two, Three!<br>OK Three More!"
 sidebar-avatar: /img/Profile.png      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
