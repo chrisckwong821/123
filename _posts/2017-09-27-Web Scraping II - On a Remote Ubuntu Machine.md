@@ -2,49 +2,55 @@
 layout: post
 header-img: "img/remote.jpg"
 title: Web Scraping II - On a Remote Ubuntu Machine
-categories: [Python, Web Scraping]
-tags: [Python, Web Scraping, Ubuntu, Virtual Machine]
+categories: [Programming]
+tags: [Python, Web Scraping, Ubuntu]
 fullview: true
 comments: true
 ---
 
-In the last article, I have managed to collected and saved the betting odds on the Hong Kong Jockery Club, using Splinter, a python light-weight scrapper leveraging on Selenium.
+In the last article, I have managed to collected and saved the betting odds on the Hong Kong Jockery Club, using **Splinter**, a Python light-weight scrapper leveraging on **Selenium**.
 
-As scraping on local machine is highly unstable, it should be done on a remote machine. In this article I managed to implement the crawler over a remote Ubuntu machine through Digital Ocean. 
+As scraping on local machine is versatile, it is suggested to be done on a remote machine. In this article I would like to implement the crawler over a remote Ubuntu machine through **DigitalOcean.** 
 
-For your reference, I am using a Mac so most of my command is only applicable for Mac-user.
-
-
-
-First, for the purpose of creating a basic remote virtual machine, I picked DigitalOcean(DO) because it is the most easiest way to start . For the most basic virtual machine, 20GB Ubuntu 16.04, 512MB Memory, $USD 5 per month. The price is comparable to Amazon Web Service(AWS) T2 Nano, but with no up-front cost or annual commitment. 
-
-Moreover, DO is super easy to use and dont have to any configuration or download a SDK. This is a huge convenience. I have tried a few Clouds including Google Cloud(GC), Microsoft Azure(MSA), creating a virtual machine on DigitalOcean is by far the most effortless one in my experience.
+For your reference, I am using a Mac so most of my command would be most suited for Mac-user.
 
 
-Full Code Procedures:
+First, for the purpose of creating a basic remote virtual machine, I picked DigitalOcean(DO) because it is the most easiest one to start with. For the most basic virtual machine, with 20GB, 512MB Memory of Ubuntu 16.04 **$USD 5 per month**. The price is comparable to Amazon Web Service(AWS) T2 Nano, but with no up-front cost or annual commitment. 
 
-    1. Initializes a machine(droplet) with python 3.5 pre-installed using the one-click app in DigitalOcean
+Moreover, DO is super easy to use and dont have to do any configuration or download an SDK. This brings a huge convenience. I have tried Google Cloud(GC) and Microsoft Azure(MSA), creating a virtual machine on DigitalOcean is by far the most effortless one from my experience.
 
-    2. Connect to the machine through ssh built-in in Mac, type `ssh root@theipofvm`. Then type the password that would be sent to your email from DigitalOcean
 
-    3. Install dependencies including Splinter(also Selenium implcitly), chromedriver for automated browsing, and chrome as a browser. 
+**Procedures with code descriptions:**
+
+    1. Initializes a machine(droplet) with python 3.5 pre-installed 
+    using the one-click app in DigitalOcean
+
+    2. Connect to the machine through ssh built-in in Mac, type 
+    $ ssh root@theipofvm 
+    Then type the password that would be sent to your email from DigitalOcean.
+
+    3. Install dependencies including 
+    - Splinter (also Selenium implcitly)
+    - Chromedriver for automated browsing
+    - Chrome as a browser. 
     
-    For Splinter: run **pip3 install Splinter**.
+    For Splinter:
+    $ pip3 install Splinter 
 
-    For chromedriver run:
+    For chromedriver:
 
-    - CHROME_DRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`
-    - wget -N http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -P ~/
-    - unzip ~/chromedriver_linux64.zip -d ~/
-    - sudo mv -f ~/chromedriver /usr/local/bin/chromedriver
-    - sudo chown root:root /usr/local/bin/chromedriver
-    - sudo chmod 0755 /usr/local/bin/chromedriver
+    $ CHROME_DRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`
+    $ wget -N http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -P ~/
+    $ unzip ~/chromedriver_linux64.zip -d ~/
+    $ sudo mv -f ~/chromedriver /usr/local/bin/chromedriver
+    $ sudo chown root:root /usr/local/bin/chromedriver
+    $ sudo chmod 0755 /usr/local/bin/chromedriver
        
     For Chrome:
-    - wget -N https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P ~/
-    - sudo dpkg -i --force-depends ~/google-chrome-stable_current_amd64.deb
-    - sudo apt-get -f install -y
-    - sudo dpkg -i --force-depends ~/google-chrome-stable_current_amd64.deb
+    $ wget -N https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P ~/
+    $ sudo dpkg -i --force-depends ~/google-chrome-stable_current_amd64.deb
+    $ sudo apt-get -f install -y
+    $ sudo dpkg -i --force-depends ~/google-chrome-stable_current_amd64.deb
 
 Then once all dependencies are settled:
 
@@ -90,10 +96,16 @@ browser.quit()
 ```
 
 
-    5. Check the path to python by typing **which python3**, copy the output. Now type **crontab -e** in terminal, type 
+    5. Check the path to python by typing 
+    $ which python3
+    Copy the output into crontab, then write the automation:
     * * * * * /pathtoyourpython /root/jockery.py into the editor.
 
-    6. If the above does not work, type **$PATH**, copy and paste the output to crontab **PATH=theoutputofyourpath** before the previous cron command.
+    6. If the above does not work, check the path:
+    $ $PATH
+    copy and paste the output on the top of crontab.
+    PATH=theoutputofyourpath 
+
 
 For improvement, instead of saving the data locally in the virtual machine, the data can be pushed immediately to some cloud storage. I would add an edit to it later.
 

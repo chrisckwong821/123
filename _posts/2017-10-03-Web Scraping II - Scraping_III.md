@@ -2,8 +2,8 @@
 layout: post
 header-img: "img/sync.jpg"
 title: Web Scraping III - Data Synchronization 
-categories: [Python, Web Scraping]
-tags: [Python, Web Scraping, Ubuntu, Database, Bash]
+categories: [Programming]
+tags: [Python, Web Scraping, Ubuntu]
 fullview: true
 comments: true
 ---
@@ -11,9 +11,9 @@ comments: true
 
 In this article, I would continue from the previous example - [crawling betting odds from Jockery Club](https://chrisckwong821.github.io/python/web%20scraping/2017/09/21/Splinter.html), to update on the data synchronization using **scp** and **sshpass**.
 
-Previously, the data was stored in csv format, which is quite simple and nice. If the data has a much bigger size, or meaning for more sophisticated usage, we may want to store the data in a database so retrieval of part of the data can be more efficient. With some modification, the output can be formatted into a database one using **sqlite3**.
+Previously, the data was stored in csv format, which is quite simple and nice. However, if the data has a much bigger size, or would be meant for more sophisticated usage, we may want to store the data in a database so retrieval of part of the data can be more efficient. With some modification, the output can be formatted into a database one using **sqlite3**.
 
-
+**Implementation of csv and db output:**
 
 ```python
 #output in csv
@@ -51,30 +51,30 @@ conn.close()
 
 ```
 
-For your reference, sqlite3 is a built-in, light-weight library in python to access database and execute SQL. After adjusting the data type, we may proceed to synchronising the data from the remote server to our desktop. In order schedule the update on a regular basis, **cron** is again applied, in addition to **scp** as a utility for file transfer, and **sshpass** for password-enabled login. Assuming your have followed the previous articles, and have the data readily updated in the remote server, steps to grab the data back to your desktop are following:
+For your reference, **sqlite3** is a built-in, light-weight library in python to access database and execute SQL. After converting the output into a database format, we may proceed to synchronise the data from the remote server to our desktop. In order schedule the update on a regular basis, **cron** is again applied, in addition to **scp** as a utility for file transfer, and **sshpass** for password-enabled login. Assuming your have followed the previous articles, and have the data readily updated in the remote server, steps to grab the data back to your desktop are following:
 
 
-1. Installing sshpass:
+1. **Installing sshpass:**
  - brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Library/Formula/sshpass.rb
 
-2. Create a dummy file and give right to modify it:
+2. **Create a file named as your database file in remote server and give right to modify it:**
  - chmod 0755 pathto/filename.db
  
-3. To retrieve of file:
+3. **Update the file from the server:**
  - sudo sshpass -p pwdofyourserver scp -r username@ip:path/filename.db /localpathtostore
  
-4. Give right to sshpass so it can be automated in cron.
+4. **Give right to sshpass so it can be automated through cron.**
  - sudo visudo
    As you get into the editor, type this:
  - yourusername ALL = NOPASSWD: path/to/sshpass
    Check the path to sshpass by `which sshpass`. Basiclly this authorizes sshpass to be executed without superuser password.
  
-5. Schedule updates in Crontab:
+5. **Schedule updates in Crontab:**
  - crontab -e to get into the editor
  - type * 1 * * * bin/bash /path/to/syncdb.sh
    where syncdb.sh contains the command in Step 3, update is run each hour now.
    
-6. Two tips:
+6. **Two tips:**
  - PATH=outputtopath
    in case system path in cron fails to access sshpass
  - MAILTO=username.com

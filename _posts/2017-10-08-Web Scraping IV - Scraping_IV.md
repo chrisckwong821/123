@@ -2,22 +2,22 @@
 layout: post
 header-img: "img/guessing.jpg"
 title: Web Scraping IV - Scrapy and Sentiment Analysis
-categories: [Python, Web Scraping, Sentiment Analysis]
-tags: [Python, Web Scraping, TextBlob, Scrapy, Bash]
+categories: [Programming]
+tags: [Python, Web Scraping, Scrapy]
 fullview: true
 comments: true
 ---
 **Project Description:**
 
-> **Scrap forex news specific to each currency pair in the last 24 hours on FXStreet at 7am each day, then calculate an average sentiment score**
+> **Scrap forex news specific to each currency pair in the last 24 hours on FXStreet at 7am each day, then calculate an average sentiment score.**
 
 **Use of Tools:**
-- **Scrapy**: a web crawler framework and data extraction API
-- **Splash & scrapy_splash**: a javascript-rending tool, so that scrapy spider can crawl responses with javascript.
-- **TextBlob**: a light-weight wrapper of NLTK, which is a full-fledged, comprehensive neutral language processing library.
+- **Scrapy**: A web crawler framework and data extraction API.
+- **Splash & scrapy_splash**: A javascript-rending tool wrapped in Python, so that scrapy spider can crawl responses with javascript rendered.
+- **TextBlob**: a light-weight wrapper of NLTK, a full-fledged, comprehensive neutral language processing library.
 
 **Installation:**
-I don't think I can explain better than the official documentations:
+The official documentations:
 - [Scrapy](https://scrapy.org/download/)
 - [Splash & scrapy_splash](https://github.com/scrapy-plugins/scrapy-splash)
 - [TextBlob](https://textblob.readthedocs.io/en/dev/)
@@ -25,15 +25,15 @@ I don't think I can explain better than the official documentations:
 
 **The Evaluation Steps:**
 
-1. Since I would like to get news for each pair, so I have first gone to the news page of [each curreny pair](https://www.fxstreet.com/news/latest?dFR%5BCategory%5D%5B0%5D=News&dFR%5BTags%5D%5B0%5D=EURUSD).
+1. Since I would like to get news for each pair, so I have first gone to the news page of each curreny pair. Example page [here:](https://www.fxstreet.com/news/latest?dFR%5BCategory%5D%5B0%5D=News&dFR%5BTags%5D%5B0%5D=EURUSD).
 
-2. As soon as I started turning over to the new page, I noticed that FXStreet allows custom pagination in the url, so I could specify a much larger number of news on a page than what I would need, eg: 50, to avoid navigating to the next page, which would involve additional lines. The [url](https://www.fxstreet.com/news/latest?q=&hPP=50&idx=FxsIndexPro&p=0&dFR%5BCategory%5D%5B0%5D=News&dFR%5BTags%5D%5B0%5D=EURUSD) here is structured differently, a parameter 'PP' is added, which determines pagination.
+2. As soon as I started turning over to a new page, I noticed that FXStreet allows custom pagination in the url, so I could specify a large number of news on a page, eg: 50, to avoid navigating to the next page, which would involve additional codes. The [url](https://www.fxstreet.com/news/latest?q=&hPP=50&idx=FxsIndexPro&p=0&dFR%5BCategory%5D%5B0%5D=News&dFR%5BTags%5D%5B0%5D=EURUSD) with pagination is structured differently than the main page, with a new parameter `PP` that determines pagination.
 
-3. After inspecting the page elements, you can see that the main table with all the news is rendered by javascript in the browser. In that case, the direct response from the url does not contain the information I need. So I looked for a way to crawl javascript content.
+3. After inspecting the page elements, you can see that the main table with all the news is rendered by javascript in our local browser. In that case, the direct response from the url does not contain the information we need, so the javascript has to be rendered before the crawling.
 
-4. It is when Splash comes into place. Once Splash is up and running through docker, I managed to get the expected return from the page.
+4. It is when **Splash** comes into place. Once Splash is up and running through docker, I managed to get the expected return from the page.
 
-5. A tip: For testing, you can download the txt file from Splash opened in a browser at  port 8050 (Default) `localhost:8050`. Then run the file in scrapy shell `scrapy shell file.html` after converting the file into html format. From there you can experiement the methods associated with the response and selectors (a scrapy object).
+5. A tip: For testing, you can download the txt file from Splash opened in a browser at  port 8050 (Default) `localhost:8050`. Then run the file in scrapy shell `scrapy shell file.html` after converting the file into html format. From there you can experiement different methods associated with the scrapy shell API.
     
 
 **Preliminary Steps:**
@@ -133,18 +133,18 @@ class QuotesSpider(scrapy.Spider):
 
 ```
 
-Once the crawler is written, it can be called by outputting its result to a json file :
+Once the crawler works as expected, it's result can be saved to a json file :
 
 ```sh
 $ scrapy crawl fxnews -o news.json
 ```
 
 From there sentiment analysis can be conducted.
-TextBlob contains an out-of-the-box function `TextBlob('text').sentiment()` that returns a numpy array `np.array(sentiment_score, subjectivity)`.
+**TextBlob** contains an out-of-the-box function `TextBlob('text').sentiment()` that returns a numpy array `np.array(sentiment_score, subjectivity)`.
 
-The sentiment score ranges from **-1 to 1**, while objectivity ranges from **0 to 1** (total objectivity = 0; total subjectivity = 1). 
+The sentiment score ranges from **-1 to 1**, while subjectivity ranges from **0 to 1** (total objectivity = 0; total subjectivity = 1). 
 
-For simplicity, I evaulated the score by multiplying both elementes to come up with a score for one piece of news, then get the aggregate average of all news concerning one currency pair.
+For simplicity, I evaulated the score by multiplying both the sentiment score and subjectivity to come up with a numerical representation for each piece of news. Then I get the aggregate average of all news concerning one currency pair.
 
 
 ```python
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     
 ```
 
-Finally, make call to both scripts by a simple bash ``execution.sh``:
+Finally, make call to both the scrapy and the sentiment analysis by a simple bash ``execution.sh``:
     
 
 ```bash
@@ -201,7 +201,7 @@ python3 sentiment.py
 
 ```
 
-Finally, simply run :
+Simply run :
 
 ```bash
 $ bash execution.sh
@@ -209,17 +209,15 @@ $ bash execution.sh
 
 Then the result would be like this:
 
+```
 2017-10-08 21:10:54.713816  Total News: 8
 
-{'EURGBP': 0.0062293261135899728} 
+{'EURGBP': 0.00622} 
 
 2017-10-08 21:10:54.839823  Total News: 50
 
-{'EURUSD': 0.014449971221041913} 
-
-2017-10-08 21:10:54.897309  Total News: 27
-
-{'USDJPY': 0.021803648466084024}
+{'EURUSD': 0.01444} 
+```
 
 
 To schedule the task to be performed at certain time every day, eg: 7am, simple use cron :
