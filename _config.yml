@@ -6,7 +6,7 @@ email: chrisckwong821@gmail.com
 description: " | Chris Wong and His Blog | On Python | Trading Strategies | Calisthenics | Meditation"
 keyword: "Python, Algorithmic Trading, Financial Anaylsis, Python, Pandas, Web Scraping"
 url: "lifeio.me"              # your host, for absolute URL
-baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
+baseurl: "lifeio.me"                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 
 

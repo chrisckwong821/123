@@ -2,8 +2,9 @@
 layout: post
 header:
 title: Numerai Tutorial - II - Label Specific Preprocessing and Iterative Screening
+subtitle: Make sense of input data
 categories: [Machine Learning]
-tags: [Numerai, Python, Data Science, Machine Learning]
+tags: [Numerai, Python, DataScience]
 header-img: "img/post-bg-os-metro.jpg"
 fullview: true
 comments: true

@@ -2,8 +2,9 @@
 layout: post
 header:
 title: Numerai Tutorial - I - Vanilla Algorithms and Adversarial Validation
+subtitle: plug-and-play machine learning
 categories: [Machine Learning]
-tags: [Numerai, Python, Data Science, Machine Learning]
+tags: [Numerai, Python, Algorithm]
 header-img: "img/post-bg-universe.jpg"
 fullview: true
 comments: true
