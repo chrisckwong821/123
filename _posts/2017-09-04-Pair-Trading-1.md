@@ -2,7 +2,7 @@
 layout: post
 header-img: "img/fractal.jpg"
 title: Pair Trading - I - DBSCAN on HK Stocks
-subtitle: Selecting Stocks with a Click
+subtitle: Selecting Stock Pair with a Click
 categories: [Machine Learning, Financial Trading]
 tags: [Python, Machine Learning, Pair Trading]
 fullview: true
@@ -27,9 +27,7 @@ Before the implementation, it is good to motivate the topic by stating what the 
 
 The ticker of the list can be found on the [HKEx](https://www.hkex.com.hk/eng/market/sec_tradinfo/dslist.htm).
 
-After downloading the ticker, I have written a crawler to get the stock prices from Yahoo Finance.
-
-To spare you from the trouble, I have uploaded the zip file containing all the stock prices over [here](https://github.com/chrisckwong821/chrisckwong821.github.io/blob/master/assets/Reference/StockData.zip)
+After downloading the ticker, I have written a crawler to get the stock prices from Yahoo Finance.To spare you from the trouble, I have uploaded the zip file containing all the stock prices over [here](https://github.com/chrisckwong821/chrisckwong821.github.io/blob/master/assets/Reference/StockData.zip)
 
 But if you are interested in the crawler as well, here is the code:
 
@@ -42,7 +40,6 @@ import re
 from urllib.request import urlopen, Request, URLError
 import calendar
 import datetime
-
 
 def crawler():
     #read in stock code
@@ -74,7 +71,6 @@ def get_crumble_and_cookie(symbol):
     crumble_str = match.group(1)
     return crumble_str , cookie_str #return both
 
-
 def download_quote(symbol, date_from, date_to,events):
     ####### this part convert the date into format intended by Yahoo Finance
     time_stamp_from = calendar.timegm(datetime.datetime.strptime(date_from, "%Y-%m-%d").timetuple())
@@ -100,8 +96,6 @@ def download_quote(symbol, date_from, date_to,events):
             attempts += 1
             time.sleep(2*attempts)
     return b''
-
-
     
 if __name__ == '__main__':
     start_date = '2015-09-03'
@@ -162,17 +156,21 @@ if __name__ == '__main__':
     (493, 638)
     Stock without any missing data: 638
 
+**Data Descriptions**
+---
 
-There are 18 tickers which cannot be loaded. Among them, ['3026.HK','4362.HK','4363.HK','9081.HK'] are absence from the list at all, meaning that no file is actually downloaded from Yahoo Finance. The other 14 are only listed within these two years and have a varying length of trading time. Since they only account for a small number, we would excluded them from the basket for now to preserve model integrity. 
+There are 18 tickers which cannot be loaded. Among them, 
+['3026.HK','4362.HK','4363.HK','9081.HK'] 
+are absence from the list at all, meaning that no file is actually downloaded from Yahoo Finance. The other 14 are only listed within these two years and have a varying length of trading time. Since they only account for a small number, we would excluded them from the basket for now to preserve model integrity. 
 
 For the remaining 916 stocks, a lot of them has null values throughout the columns, or consists of many NaN values. A closer look into the data, shows that some of them dont have the time series data up to two years.
 
-So now we are left with 638 stocks, around 2/3 of the original dataset. It is quite a bit of loss but still acceptable considering the source of data is from web.
-
+So now we are left with 638 stocks, around 2/3 of the original dataset. It is quite a bit of loss but still acceptable considering the source of data is from web only.
+---
 
 **Dimensionality Reduction:**
 
-First we may ponder the necessarity of dimensionality reduction. For a dataframe of (493, 638) size, certainly the computer can manage the computation of calculating each point's euclidan distance(or other distance matrics) for clustering efficiently. But feeding each day's percentage return into the clustering algorithm may lead to overfitting, in the sense that most stocks may be sparse from each other, left the dataset with one big central cluster only. I have tried with different combinations of parameters(the radius search of one point/eps) to find the most distinct clustering, however it is still not as good as the one with a reduced matrix.
+We may ponder the necessarity of dimensionality reduction, for a dataframe as small as (493, 638), certainly the computer can manage the computation of calculating each point's euclidan distance(or other distance matrics) for clustering to work, but feeding each day's percentage return into the clustering algorithm may lead to overfitting, in the sense that most stocks may be sparse from each other, left the dataset with one big central cluster only. I have tried with different combinations of parameters (the radius search of one point/eps) to find the most distinct clustering, however it is still not as good as the one with a reduced matrix.
 
 **Implementation without Dimensionality Reduction**
 
@@ -215,8 +213,6 @@ dod_analysis(eps=0.25)
 
     cluster found:  4
 
-
-
 ![png]({{ site.baseurl }}/assets/media/PairTrade/1/output_10_1.png)
 
 
@@ -257,12 +253,10 @@ dod_analysis(eps=0.1,n_components=200)
 
 
 
-With 3 clusters of (3,4,4) stocks, There are only three graphs and 6+6+3 = 15 pairs only.
+With 3 clusters of stocks (3,4,4), There are only three graphs and 6+6+3 = 15 pairs only.
 This is exactly the size of space I intended.
 
 Now let's get into the content of these spaces:
-
-
 
 ```python
 import numpy as np
@@ -302,7 +296,6 @@ dod_plot(eps=0.1,n_components=200)
     ['2822.HK', '2823.HK', '82822.HK']
 
 
-
 ![png]({{ site.baseurl }}/assets/media/PairTrade/1/output_16_1.png)
 
 
@@ -321,17 +314,15 @@ dod_plot(eps=0.1,n_components=200)
 
 
 
-Well apparently except the second graph, the results for the first and third one quite make intuitive sense.
-
-For the first graph:
+For ['2822.HK', '2823.HK', '82822.HK']
 ---
-all three are China ETF, giving them a solid ground on fundamentals for pair trading. However, it also implies a small room for arbitrage as their price tend to behave very closely to one another. Also a lot of institutional investors are already monitoring them.
+All three are China ETF, giving them a solid ground on fundamentals for pair trading. However, it also implies a small room for arbitrage as their price tend to behave very closely to one another. Also a lot of institutional investors are already monitoring them.
 
-For the second graph:
+For ['0247.HK', '2666.HK', '2819.HK', '2821.HK']:
 ---
 Omitting the two non-performaing stocks, **2819/2821** have the same underlyings : **Markit iBoxx ABF Pan-Asia Index**. However they exhibited a diverging discrepancy since the second quarter last year, all the way until the end of last year. This is indeed a good case of pair trading had we noticed the opportunity. Now the 2821 is trading slightly at premium than 2819, probably can keep an eye on this pair.
 
-For the third graph:
+For ['2800.HK', '3007.HK', '3040.HK', '3055.HK']:
 ---
 **2800/3007** are HSI/China index funds respectively. From the price perspectively, they behave quite nicely since they cross one another from time to time. However 3007 is not quite liquid as an ETF, so in reality it is not practical to capture the spread.
 **3040/3055** are China ETF as well. both are not liquid.
@@ -369,22 +360,22 @@ dod_plot(eps=0.25,n_components='NA')
 ![png]({{ site.baseurl }}/assets/media/PairTrade/1/output_19_5.png)
 
 
-**0386/0857:**
+['0386.HK', '0857.HK']:
 ---
 both are oil/energy SEOs, sensible with the perspective of fundamental factor. Now their price are exhibiting a diverging behavior. I am not an analyst of corporate finance but the result obviously shows that it is worth looking into their status to see if a pair trade can be established.
 
-**0737/80737:**
+['0737.HK', '80737.HK']:
 ---
 Non-liquid stocks with the same underlying infrastructure investment.
 
-**6030/6837:**
+['6030.HK', '6837.HK']:
 ---
 Both are Chinese financial stocks with enough liquidity. They also exhibits similar price movements in the past two years with possibly a moving drift. Worth looking into as well.
 
 
 __Summary:__
 
-A clustering method call DBSCAN with dimensionality reduction is implemented to select potential pairs for trading in HKEx, based on stocks' geometric return/ Day-over-day percentage change. 
+A clustering method, DBSCAN with dimensionality reduction is implemented to select potential pairs for trading in HKEx, based on stocks' geometric return/ Day-over-day percentage change. 
 
 For the next episode, I would look into the mean-reverting models that can be used to imply a moving/drifting mean for the spread between stocks pairs.
 
