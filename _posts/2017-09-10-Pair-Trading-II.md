@@ -2,36 +2,38 @@
 layout: post
 header-img: "img/amazing.jpg"
 title: Pair Trading - II - Regression and Ornstein-Uhlenbeck process(O-U Model)
-categories: [Machine Learning, Financial Trading]
-tags: [Python, Machine Learning, Pair Trading]
+categories: [Financial Trading]
+tags: [Python, Pair Trading, Algorithms]
 fullview: true
 comments: true
 ---
-This is a continuation of the Pair Trading Series. For the first article which discusses how to find out potential trading pairs using clustering DBSCAN, you may go back to [here](https://chrisckwong821.github.io/machine%20learning/financial%20trading/2017/09/04/Pair-Trading-1.html). 
+This is a continuation of the **Pair Trading Series**. For the first article which discusses how to find out potential trading pairs using clustering algorithms **DBSCAN**, you may go back to [here](https://chrisckwong821.github.io/machine%20learning/financial%20trading/2017/09/04/Pair-Trading-1.html). 
 
 In this article, I would focus on the analysis of trading pairs by modelling a mean-reverting spread. There are a few ways to define "spread" between prices, I would list a fews that I have come across:
 
-(1) Simple price differences between two products: 
+**1. Simple price differences between two products:**
 
 This only gives a sense of how two products move relative to one another. Practically, unless two products have similar price scales, the simple difference has not much meaning.
 
-(2) Percentage Change:
+**2. Percentage Change:**
 
-Normalize the simple price difference from a chosen point in time, then measure the spread as if a product itself. This has the advantage of comparison with previous data. The downside is, it is not representative of the pair relationship. For example, assume there are stock A valued at $1 and stock B valued at $10 at time t0. At time t1, both appreciated 10% so $1.1 and $11 for stock A and stock B respectively. However, the spread would appreciated 10% from $9 to $9.9 as well. So practically speaking, simple price difference/its standardized form both would not converge to a particular level. 
+Normalize the simple price difference from a chosen point in time, then measure the spread as if a product itself. This has the advantage of comparison with previous data. The downside is, it is not representative of the pair relationship. For example, assume there are stock A valued at $1 and stock B valued at $10 at time t0. At time t1, both appreciated 10% so $1.1 and $11 for stock A and stock B respectively. However, the spread would appreciated 10% from $9 to $9.9 as well. Practically speaking, **simple price difference/its standardized form both would not converge to a particular level.**
 
-(3) Relative Percentage Change:
+**3. Relative Percentage Change:**
 
-Using the previous example, an improved form would be measuring the percentage change of both products. So if both stock A and stock B move up 10%, their spread movement would be 0%. This is a more realistic approach to model spread. In pair trading, where we long one product and short the others, profit and loss would be dependent on this relative percentage change given the portfolio is constructed evenly among two stocks. For example, assume one million stock A is longed and one million stock B is short sold, stock A has a 10% gain while stock B has a 5% gain. Then the pnL would be 0.5x1.1+0.5x0.95 = +%2.5. So a spread of (5%) results in a +2.5% gain in the entire portfolio. From this example, the percentage spread is directly representative of gain from this type of simple long/short.
+Using the previous example, an improved form would be to measure the percentage change of both products. So if both stock A and stock B move up 10%, their spread movement would be 0%. This is a more realistic approach to model spread. In pair trading, where we long one product and short the other, profit and loss would be dependent on this relative percentage change given the portfolio is constructed evenly among the two. For example, assume one million stock A is longed and one million stock B is short sold, stock A has a 10% gain while stock B has a 5% gain. Then the pnL would be 0.5x1.1+0.5x0.95 = +%2.5. So a spread of (5%) results in a +2.5% gain in the entire portfolio. From this example, the percentage spread is representative of gain from a vanilla long/short.
 
-(4) Price Ratio:
+**4. Price Ratio:**
 
 Directly divide the price of one stock by the other one. This measures the geometric change of both prices. This is the most common use of spread.
 
 
-In this article, I would implement a model that assumes a mean-reverting behavior hidden in the price differential defined by (3). I took reference from [the paper written by Y Chen, W Ren and X Lu](http://cs229.stanford.edu/proj2012/ChenRenLu-MachineLearningInPairsTradingStrategies.pdf) from Stanford. The paper illustrated two approaches to model spread, one adopts O-U model and regression and the other one implemented Kalman's Filter and Expectataion Maximization. For clarity, I would implement the first approach in this article and separate the other one in the next article. I would follow the paper step-by-step with comment on codes. At the end, a profit and loss path would be simulated to measure how  the stock pair is performing.
+In this article, I would implement a model that assumes a mean-reverting behavior hidden in the price differential defined by (3). I took reference from [the paper written by Y Chen, W Ren and X Lu](http://cs229.stanford.edu/proj2012/ChenRenLu-MachineLearningInPairsTradingStrategies.pdf) from Stanford. 
+
+The paper illustrated two approaches to model spread, one adopts O-U model and regression and the other one implemented Kalman's Filter and Expectataion Maximization. I would implement the first approach in this article. I would follow the paper step-by-step with comment on codes. At the end, a profit and loss path would be simulated to measure how the stock pair is performing.
 
 
-In the last article, the stock pair 0386.HK and 0857.HK was discovered by the clustering algorithm DBSCAN. Let's use this as an example for our analysis:
+In the last article, one of the stock pair discovered by the clustering algorithm DBSCAN was **0386.HK and 0857.HK**. Let's use this as an example for our analysis:
 
 
 
@@ -70,7 +72,7 @@ print(openprice.head(2))
 
 
 
-Let's get our dataset ready by reading in the stock data downloaded from Yahoo Finance. The first dataframe is closed price which would be used for signal generation, while the second is the opening price which would be used for profit and loss simulation. Recalled from last article that a crawler was writtern to get the information. You may download the data(As of 04-09-2017) from [here](https://github.com/chrisckwong821/chrisckwong821.github.io/blob/master/assets/Reference/StockData.zip).
+Let's get our dataset ready by reading in the stock data downloaded from **Yahoo Finance**. The first dataframe is closed price which would be used for signal generation, while the second is the opening price which would be used for profit and loss simulation. Recalled from last article that a crawler was writtern to get the information. You may download the data(As of 04-09-2017) from [here](https://github.com/chrisckwong821/chrisckwong821.github.io/blob/master/assets/Reference/StockData.zip).
 
 
 
@@ -92,10 +94,10 @@ def rollingreg(df,window=window,target=target):
     new_df = pd.concat([df,alpha,beta],axis=1)
     new_df['residual'] = new_df['{}'.format(target[1])] - new_df['alpha'] + new_df['beta']*new_df['{}'.format(target[0])]
     return new_df
+
 rollingreg(df)[57:62]
+
 ```
-
-
 
 
 <div>
@@ -155,10 +157,7 @@ rollingreg(df)[57:62]
 </table>
 </div>
 
-
-<br/> 
-
-Here is a function that does rolling regression. Since pandas rolling regression function only returns beta, I defined my own one that fully returns alpha, beta and residual. Because I defined a rolling window of 60 days, the regression parameters only have values starting from the 60th row.
+Here is a function that does rolling regression. Since pandas rolling regression function only returns the beta, I defined my own one that fully returns alpha, beta and the residual. Because I defined a rolling window of 60 days, the regression parameters only have values starting from the 60th row.
 
 
 
@@ -230,10 +229,7 @@ step1()[57:62]
 </div>
 
 
-
-<br/> 
-
-Here we first convert the stock-price series into its percentage change. From the regression parameters, we verify that  `alpha` is very close to zero, so we can ignore it for now. `beta` would be used for robustness checks. Since the model expects a constant beta, stock pairs with an versatile beta within our targeted trading time span would impose a bigger risk on the trades. The paper written by Y Chen mentions that a stable rolling beta for 5 days would be a baseline signal. In reality, this would be case dependent.
+Here we first convert the stock-price series into its percentage change by normalizing against its price on the first row. From the regression parameters, we verify that  `alpha` is very close to zero, safely to be ignored for now. Since the model expects a constant beta, stock pairs with an versatile beta within our targeted trading time span would impose a bigger risk on the trades. The paper written by Y Chen mentions that a stable rolling beta for 5 days would be a baseline signal. In reality, this would be case dependent.
 
 
 ```python
@@ -249,7 +245,13 @@ plt.show()
 ![png]({{ site.baseurl }}/assets/media/PairTrade/2/output_9_0.png)
 
 
-Unfortunately, the stock pair 0386.HK and 0857.HK does not demonstrate a stable beta in the past two years. especially in recent months. It oscillated from 0.7 to 1 with a sudden drop of 0.5 in the past six months. However, for demonstration purpose I would continue to use this as an example. Now, after the first regression is done, the rolling sum of residual term would be used for another round of regression against itself with one day delay ~ (R = a + b x R(delay=1) + error). This is equivalent to autoregression with degree 1 / AR(1). 
+Unfortunately, the stock pair **0386.HK and 0857.HK** does not demonstrate a stable beta in the past two years. especially in recent months. It oscillated from 0.7 to 1 with a sudden drop of 0.5 in the past six months. However, for demonstration purpose I would continue to use this as an example. 
+
+Now, after the first regression is done, the rolling sum of residual term would be used for another round of regression against itself with one day delay : 
+
+`(R = a + b x R(delay=1) + error)`
+
+This is equivalent to autoregression with degree 1 / AR(1). 
 
 
 ```python
@@ -268,7 +270,9 @@ def step2(df=df):
     #new_df['speed'] = -np.log(new_df['beta'])*252
     #new_df['std'] = np.sqrt(new_df['equsigma']*2*new_df['speed'])
     return new_df
+
 step2()[235:240]
+
 ```
 
 
@@ -349,28 +353,27 @@ step2()[235:240]
 </table>
 </div>
 
-
-<br/> 
-
-
-First, `sum_residual` is the 60-day rolling sum of the residuals we get from the first regression of stock price(percentage change). It would be the `Y` in the coming regression. 
+Parameters Explained:
+---
+`sum_residual` is the 60-day rolling sum of the residuals we get from the first regression of stock price(percentage change). It would be the `Y` in the coming regression. 
 
 Column `sum_residual_delay` is `sum_residual` with one-day delay. It would be the  `X` in the coming regression.
 
-Column alpha,beta and residual are the regression parameters resulted from regressing `sum_residual` on `sum_residual_delay`. 
+Column alpha, beta and residual are the regression parameters resulted from regressing `sum_residual` on `sum_residual_delay`. 
 
 `mu` and `equisignma` are directly related to our signal generation:
 
 `mu`: The mean of residual we would expect.
 `equisignma`: The standard deviation of mu we would expect 
+---
 
-Now, whenever the residual term exceeds the level of `mu` plus some degree of `equisignma` (z-score depending on the risk level), we can short sell the spread. Recall how regression is done(Y=a+bx+error), concretely short selling the spread means short Y long X(Y-X+). On the other hand, when the residual term plunges through the level of `mu` minus some degree of `equisignma`, we long the spread, long Y short X (Y+X-).
+Whenever the residual term exceeds the level of `mu` plus some degree of `equisignma` (z-score depending on the risk level), we can short sell the spread. Recall how regression is done :
 
+`Y = a + bx + error` 
 
+Concretely, short selling the spread means short Y long X (Y-X+). On the other hand, when the residual term plunges through the level of `mu` minus some degree of `equisignma`, we long the spread, long Y short X (Y+X-).
 
 Picking a z-score of 1, Let's see how the pnl performs:
-
-
 
 ```python
 
@@ -466,14 +469,10 @@ pnl(step2())
 ![png]({{ site.baseurl }}/assets/media/PairTrade/2/output_14_0.png)
 
 
-
-
-
-    {'maximum day gain': 0.29080789946140051,
-     'maximum day loss': -0.19394827586206809,
-     'profit': 0.039680522576772459,
-     'win ratio': 0.43506493506493504}
-
+    {'maximum day gain': 0.29080,
+     'maximum day loss': -0.19394,
+     'profit': 0.03968,
+     'win ratio': 0.4350}
 
 
 
