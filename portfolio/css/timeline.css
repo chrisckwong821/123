@@ -145,6 +145,15 @@ body, html {
 }
 
 /** Venders Logo **/
+.i-heroku:before {
+	content: "";
+    display: block;
+    width: 40px;
+    height: 40px;
+    background: url("../images/logo-heroku.png") 50% 50% no-repeat;
+    background-size: 20px;
+}
+
 .i-vue:before {
 	content: "";
     display: block;
@@ -153,6 +162,7 @@ body, html {
     background: url("../images/logo-vue.png") 50% 50% no-repeat;
     background-size: 20px;
 }
+
 
 .i-kissy:before {
 	content: "";
